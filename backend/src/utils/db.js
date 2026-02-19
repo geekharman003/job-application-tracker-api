@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import { ENV } from "../config/env.js";
 
-const sequelize = new Sequelize(
+export const sequelize = new Sequelize(
   "jobapplicationtracker",
   ENV.DB_USERNAME,
   ENV.DB_PASSWORD,
@@ -11,7 +11,7 @@ const sequelize = new Sequelize(
   },
 );
 
-const connectToDB = async () => {
+export const connectToDB = async () => {
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
@@ -19,5 +19,3 @@ const connectToDB = async () => {
     console.error("Unable to connect to the database:", error);
   }
 };
-
-export default connectToDB;
