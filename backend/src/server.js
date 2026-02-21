@@ -1,5 +1,6 @@
 import express from "express";
 const app = express();
+
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
@@ -11,6 +12,7 @@ import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import applicationRoutes from "./routes/application.route.js";
 import reminderRoutes from "./routes/reminder.route.js";
+import companyRoutes from "./routes/company.route.js";
 
 import {
   User,
@@ -39,6 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/applications/:applicationId/reminders", reminderRoutes);
+app.use("/api/companies", companyRoutes);
 
 await sequelize.sync({ force: false });
 app.listen(ENV.PORT || 3000, async () => {

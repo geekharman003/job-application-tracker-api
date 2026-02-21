@@ -9,8 +9,8 @@ const router = express.Router({ mergeParams: true });
 
 router.post("/", protectRoute, createReminder);
 
-router.get("/:reminderId", getReminder);
+router.get("/:reminderId",protectRoute, getReminder);
 
-router.delete("/:reminderId", deleteReminder);
+router.delete("/:reminderId",protectRoute, deleteReminder);
 
 export default router;
