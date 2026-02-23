@@ -34,7 +34,7 @@ const Application = sequelize.define(
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false,
+      defaultValue:"applied",
     },
     notes: {
       type: DataTypes.STRING,

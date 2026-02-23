@@ -1,5 +1,6 @@
 import { Application, Attachment, Company } from "../models/index.js";
 import { Op } from "sequelize";
+import { sequelize } from "../utils/db.js";
 
 export const createApplication = async (req, res) => {
   const { id: userId } = req.user;
@@ -14,45 +15,55 @@ export const createApplication = async (req, res) => {
     notes,
   } = req.body;
 
-  if (!name || !jobTitle)
-    return res
-      .status(400)
-      .json({ message: "company name and job title are required" });
+  const t = await sequelize.transaction();
+  try {
+    if (!name || !jobTitle)
+      return res
+        .status(400)
+        .json({ message: "company name and job title are required" });
 
-  const company = await Company.findOrCreate({
-    raw: true,
-    where: {
-      name: name.trim().toLowerCase(),
-    },
-    defaults: {
-      UserId: userId,
-      industry,
-      size,
-      contactEmail,
-    },
-  });
+    const company = await Company.findOrCreate({
+      raw: true,
 
-  const newApplication = await Application.create(
-    {
-      UserId: userId,
-      CompanyId: company[0].id,
-      jobTitle,
-      applicationDate,
-      status,
-      notes,
-    },
-    { raw: true },
-  );
+      where: {
+        name: name.trim().toLowerCase(),
+      },
+      defaults: {
+        UserId: userId,
+        industry,
+        size,
+        contactEmail,
+      },
+      transaction: t,
+    });
 
-  const attachment = await Attachment.create(
-    {
-      ApplicationId: newApplication.id,
-      fileUrl: req.file.path,
-    },
-    { raw: true },
-  );
+    const newApplication = await Application.create(
+      {
+        UserId: userId,
+        CompanyId: company[0].id,
+        jobTitle,
+        applicationDate,
+        status,
+        notes,
+      },
+      { raw: true, transaction: t },
+    );
 
-  res.status(200).json({ message: "Application created successfully" });
+    const attachment = await Attachment.create(
+      {
+        ApplicationId: newApplication.id,
+        fileUrl: req.file.path,
+      },
+      { raw: true, transaction: t },
+    );
+
+    await t.commit();
+    res.status(200).json({ message: "Application created successfully" });
+  } catch (error) {
+    await t.rollback();
+    console.log("Error in createApplication:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
 export const updateApplication = async (req, res) => {
