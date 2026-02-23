@@ -21,7 +21,6 @@ import {
   Attachment,
   Company,
   Reminder,
-  JobListing,
 } from "./models/index.js";
 
 const __filename = fileURLToPath(import.meta.url);

@@ -2,7 +2,6 @@ import User from "./user.model.js";
 import Application from "./application.model.js";
 import Attachment from "./attachment.model.js";
 import Company from "./company.model.js";
-import JobListing from "./jobListings.model.js";
 import Reminder from "./remainder.model.js";
 
 // User
@@ -25,4 +24,4 @@ Attachment.belongsTo(Application);
 User.hasMany(Company);
 Company.belongsTo(User);
 
-export { User, Application, Attachment, Company, JobListing, Reminder };
+export { User, Application, Attachment, Company, Reminder };
