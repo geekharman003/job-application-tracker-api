@@ -12,8 +12,6 @@ Built with modern Node.js technologies, this API enables users to:
 - View actionable analytics—track response rates, application status distribution, and interview progress
 - Secure their data with JWT authentication
 
-This backend is part of a larger job application tracker system and serves a web/mobile frontend with RESTful endpoints. Whether you're applying to 10 or 100+ positions, the API helps you stay organized and ensures no opportunity is missed.
-
 **Tech stack**
 - Node.js + Express
 - Sequelize (+ mysql2) for ORM
