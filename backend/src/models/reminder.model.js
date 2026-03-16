@@ -7,21 +7,23 @@ const Reminder = sequelize.define(
   {
     ApplicationId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true,
       references: {
         model: Application,
         key: "id",
       },
+      allowNull: false,
     },
     reminderDate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    reminderMessage: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     isSent: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   { timestamps: true },

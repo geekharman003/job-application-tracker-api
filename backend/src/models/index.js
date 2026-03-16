@@ -1,27 +1,24 @@
 import User from "./user.model.js";
 import Application from "./application.model.js";
-import Attachment from "./attachment.model.js";
 import Company from "./company.model.js";
-import Reminder from "./remainder.model.js";
+import Reminder from "./reminder.model.js";
+import Note from "./notes.model.js";
+import Resume from "./resume.model.js";
 
 // User
-User.hasMany(Application);
+User.hasMany(Application, { onDelete: "CASCADE" });
 Application.belongsTo(User);
 
-// Company
-Company.hasMany(Application);
-Application.belongsTo(Company);
-
 // Application -> Reminder
-Application.hasOne(Reminder);
+Application.hasOne(Reminder, { onDelete: "CASCADE" });
 Reminder.belongsTo(Application);
 
-// Application -> Attachment
-Application.hasMany(Attachment);
-Attachment.belongsTo(Application);
+// Application -> Note
+Application.hasMany(Note, { onDelete: "CASCADE" });
+Note.belongsTo(Application);
 
-// User -> Company
-User.hasMany(Company);
-Company.belongsTo(User);
+// User -> Resume
+User.hasMany(Resume, { onDelete: "CASCADE" });
+Resume.belongsTo(User);
 
-export { User, Application, Attachment, Company, Reminder };
+export { User, Application, Company, Reminder, Note, Resume };

@@ -19,7 +19,7 @@ export const signup = async (req, res) => {
       });
     }
 
-    // check if email i s valid using regex
+    // check if email is valid using regex
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({

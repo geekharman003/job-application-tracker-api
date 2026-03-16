@@ -17,6 +17,18 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    bio: {
+      type: DataTypes.STRING,
+    },
+    linkedInUrl: {
+      type: DataTypes.STRING,
+    },
+    githubUrl: {
+      type: DataTypes.STRING,
+    },
+    profilePicUrl: {
+      type: DataTypes.STRING,
+    },
   },
   { timestamps: true },
 );

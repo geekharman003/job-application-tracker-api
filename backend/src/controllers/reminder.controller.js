@@ -10,7 +10,7 @@ export const createReminder = async (req, res) => {
       reminderDate: reminderDate,
     });
 
-    res.status(201).json({ message: "Remainder created successfully" });
+    res.status(201).json({ message: "Reminder created successfully" });
   } catch (error) {
     console.log("Error in createReminder:", error);
     res.status(500).json({ message: "Internal server error" });

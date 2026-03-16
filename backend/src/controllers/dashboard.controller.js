@@ -37,10 +37,11 @@ export const getSummary = async (req, res) => {
       }
     });
 
-    const responseRate = (
-      ((interviewed + offered + rejected) / totalApplications) *
-      100
-    ).toFixed(2);
+    const responseRate = Math.floor(
+      (interviewed + offered + rejected) / totalApplications,
+    );
+
+    const offerRate = Math.floor(offered / interviewed);
 
     const summary = {
       totalApplications,
@@ -50,6 +51,7 @@ export const getSummary = async (req, res) => {
       rejected,
       noResponse,
       responseRate,
+      offerRate,
     };
 
     res.status(200).json(summary);

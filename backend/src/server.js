@@ -13,14 +13,15 @@ import userRoutes from "./routes/user.route.js";
 import applicationRoutes from "./routes/application.route.js";
 import reminderRoutes from "./routes/reminder.route.js";
 import companyRoutes from "./routes/company.route.js";
-import dashboardRoutes from "./routes/dashboard.route.js"
+import dashboardRoutes from "./routes/dashboard.route.js";
 
 import {
   User,
   Application,
-  Attachment,
   Company,
   Reminder,
+  Note,
+  Resume,
 } from "./models/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -43,7 +44,6 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/applications/:applicationId/reminders", reminderRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/dashboard/", dashboardRoutes);
-
 
 await sequelize.sync({ force: false });
 app.listen(ENV.PORT || 3000, async () => {

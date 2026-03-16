@@ -27,16 +27,29 @@ const Application = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    applicationDate: {
-      type: DataTypes.DATEONLY,
+    location: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: new Date(),
+    },
+    salaryRange: {
+      type: DataTypes.STRING,
+    },
+    jobLink: {
+      type: DataTypes.STRING,
     },
     status: {
       type: DataTypes.STRING,
-      defaultValue:"applied",
+      defaultValue: "applied",
     },
-    notes: {
+    applicationDate: {
+      type: DataTypes.DATEONLY,
+      defaultValue: new Date(),
+    },
+    resumeVersion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    jobDescription: {
       type: DataTypes.STRING,
     },
   },

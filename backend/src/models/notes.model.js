@@ -1,20 +1,19 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../utils/db.js";
-
 import Application from "./application.model.js";
 
-const Attachment = sequelize.define(
-  "Attachment",
+const Note = sequelize.define(
+  "Note",
   {
     ApplicationId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: Application,
         key: "id",
       },
+      allowNull: false,
     },
-    fileUrl: {
+    note: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -22,4 +21,4 @@ const Attachment = sequelize.define(
   { timestamps: true },
 );
 
-export default Attachment;
+export default Note;
