@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosClient } from "../axios/axiosClient";
@@ -10,7 +10,6 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
-
 
   const setAuthUser = useAuth((state) => state.setAuthUser);
 
@@ -27,7 +26,6 @@ function Signup() {
 
       setAuthUser(response.data);
       toast.success("Signup Successfully");
-    //   navigate("/dashboard");
     } catch (e) {
       toast.error("Something went wrong!");
     } finally {
@@ -40,8 +38,8 @@ function Signup() {
 
   return (
     <form
+    onSubmit={(e) => handleSignup(e)}
       id="signup-form"
-      onSubmit={(e) => handleSignup(e)}
       className="flex justify-center items-center h-screen bg-slate-200"
     >
       <div id="signup" className="p-5 bg-white rounded-xl w-[350px]">

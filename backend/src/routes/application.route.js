@@ -18,7 +18,6 @@ import {
   deleteReminder,
 } from "../controllers/application.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { upload } from "../utils/upload.js";
 import { getReminder } from "../controllers/reminder.controller.js";
 
 router.post("/", protectRoute, createApplication);

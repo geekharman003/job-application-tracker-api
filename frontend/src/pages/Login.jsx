@@ -10,7 +10,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const authUser = useAuth((state) => state.authUser);
   const setAuthUser = useAuth((state) => state.setAuthUser);
 
 
@@ -78,7 +77,7 @@ function Login() {
           type="submit"
           className="flex justify-center bg-blue-600 text-white w-full mt-2 rounded-xl p-2"
         >
-          {isLoggingIn ? <Loader /> : "LOGIN"}
+          {isLoggingIn ? <Loader className="animate-spin" /> : "LOGIN"}
         </button>
         <p className="text-center mt-1">
           No account?{" "}
