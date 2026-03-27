@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header/Header";
 import { axiosClient } from "../axios/axiosClient";
 import toast from "react-hot-toast";
-import DeleteModal from "../components/DeleteModal/DeleteModal";
+import ProfileDeleteModal from "../components/ProfileDeleteModal/ProfileDeleteModal";
 import defaultProfile from "../assets/images/default-profile-img.jpg";
-import axios from "axios";
 
 function Profile() {
   const [name, setName] = useState("");
@@ -127,7 +126,7 @@ function Profile() {
     <>
       <Header />
       {isDeletingProfile ? (
-        <DeleteModal setIsDeletingProfile={setIsDeletingProfile} />
+        <ProfileDeleteModal setIsDeletingProfile={setIsDeletingProfile} />
       ) : (
         ""
       )}

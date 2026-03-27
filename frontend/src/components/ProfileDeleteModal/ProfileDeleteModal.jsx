@@ -4,8 +4,8 @@ import { axiosClient } from "../../axios/axiosClient";
 import toast from "react-hot-toast";
 import useAuth from "../../store/useAuthStore";
 
-function DeleteModal({ setIsDeletingProfile }) {
-  const {  setAuthUser } = useAuth();
+function ProfileDeleteModal({ setIsDeletingProfile }) {
+  const { setAuthUser } = useAuth();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -58,4 +58,4 @@ function DeleteModal({ setIsDeletingProfile }) {
   );
 }
 
-export default DeleteModal;
+export default ProfileDeleteModal;

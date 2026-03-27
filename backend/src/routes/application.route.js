@@ -24,13 +24,6 @@ router.post("/", protectRoute, createApplication);
 
 router.put("/:id", protectRoute, updateApplication);
 
-// router.put(
-//   "/:id/attachments",
-//   protectRoute,
-//   upload.single("file"),
-//   updateAttachement,
-// );
-
 router.delete("/:id", protectRoute, deleteApplication);
 
 router.get("/", protectRoute, getApplications);

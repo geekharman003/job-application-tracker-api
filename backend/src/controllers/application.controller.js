@@ -1,12 +1,13 @@
+import { type } from "os";
 import { Application, Company, Note, Reminder } from "../models/index.js";
 import { sequelize } from "../utils/db.js";
+import { QueryTypes } from "sequelize";
 
 // application
 export const createApplication = async (req, res) => {
   const { id: userId } = req.user;
   const {
-    name,
-    domain,
+    company,
     jobTitle,
     location,
     salaryRange,
@@ -19,41 +20,41 @@ export const createApplication = async (req, res) => {
 
   const t = await sequelize.transaction();
   try {
-    if (!name || !domain || !jobTitle || !location || !resumeVersion)
+    if (!company || !jobTitle || !location || !resumeVersion)
       return res.status(400).json({
-        message:
-          "company name, domain, jobTitle, location, resumeVersion are required",
+        message: "company name, jobTitle, location, resumeVersion are required",
       });
 
-    const company = await Company.findOrCreate({
+    const companyDetails = await Company.findOrCreate({
       where: {
-        name: name.trim().toLowerCase(),
-      },
-      defaults: {
-        domain,
+        name: company.trim().toLowerCase(),
       },
       transaction: t,
       raw: true,
     });
 
-    const newApplication = await Application.create(
-      {
-        UserId: userId,
-        CompanyId: company[0].id,
-        jobTitle,
-        location,
-        salaryRange,
-        jobLink,
-        status,
-        applicationDate,
-        resumeVersion,
-        jobDescription,
-      },
-      { raw: true, transaction: t },
-    );
+    const newApplication = (
+      await Application.create(
+        {
+          UserId: userId,
+          CompanyId: companyDetails[0].id,
+          jobTitle,
+          location,
+          salaryRange,
+          jobLink,
+          status,
+          applicationDate,
+          resumeVersion,
+          jobDescription,
+        },
+        { transaction: t },
+      )
+    ).toJSON();
 
     await t.commit();
-    res.status(200).json(newApplication);
+    res
+      .status(200)
+      .json({ ...newApplication, company: companyDetails[0].name });
   } catch (error) {
     await t.rollback();
     console.log("Error in createApplication:", error);
@@ -132,40 +133,92 @@ export const updateAttachement = async (req, res) => {
 export const getApplications = async (req, res) => {
   try {
     const { id: userId } = req.user;
-    let { title, status, companyName } = req.query;
+    let { limit, offset } = req.query;
+    limit = Number(limit);
+    offset = Number(offset);
 
-    const whereConditions = {};
-    whereConditions.UserId = userId;
+    let { title, status, company } = req.query;
 
-    if (status) {
-      whereConditions.status = status;
+    let companyDetails = null;
+
+    // filter query
+    let query = "SELECT * FROM applications WHERE UserId = :UserId";
+    let totalQuery = "SELECT COUNT(*) as totalRecords FROM applications WHERE UserId = :UserId";
+
+    // filters
+    if (status && status !== "all") {
+      query += " AND status = :status";
+      totalQuery += " AND status = :status";
     }
 
     if (title) {
-      whereConditions.jobTitle = title;
+      query += " AND jobTitle LIKE :jobTitle";
+      totalQuery += " AND jobTitle LIKE :jobTitle";
+
     }
 
-    if (companyName) {
-      const company = await Company.findOne({
-        where: { name: companyName.trim().toLowerCase() },
+    if (company) {
+      companyDetails = await Company.findOne({
+        where: { name: company.trim().toLowerCase() },
         attributes: ["id"],
+        raw: true,
       });
 
-      if (company) {
-        whereConditions.CompanyId = company.id;
+      if (companyDetails) {
+        query += " AND CompanyId = :companyId";
+        totalQuery += " AND CompanyId = :companyId";
       }
     }
 
-    const applications = await Application.findAll({
-      where: whereConditions,
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-      raw: true,
+    query += " LIMIT :LIMIT OFFSET :OFFSET";
+
+    const applications = await sequelize.query(query, {
+      replacements: {
+        UserId: userId,
+        status: status,
+        jobTitle: title + "%",
+        companyId: companyDetails ? companyDetails.id : 0,
+        LIMIT: limit,
+        OFFSET: offset,
+      },
+      type: QueryTypes.SELECT,
     });
 
-    if (!applications.length)
-      return res.status(404).json({ message: "No Application found" });
+    // total records query
+    let [totalRecords] = await sequelize.query(totalQuery,
+      {
+        replacements: {
+          UserId: userId,
+          status: status,
+          jobTitle: title + "%",
+          companyId: companyDetails ? companyDetails.id : 0,
+        },
+      },
+    );
 
-    res.status(200).json(applications);
+    totalRecords = totalRecords[0]["totalRecords"]
+
+    const pagination = {
+      start: offset + 1,
+      end: limit + offset > totalRecords ? totalRecords : limit + offset,
+      hasNextPage: limit + offset < totalRecords,
+      hasPrevPage: offset > 0,
+      totalRecords,
+    };
+
+    for (const application of applications) {
+      const companyDetails = await Company.findByPk(application.CompanyId, {
+        attributes: ["name"],
+        raw: true,
+      });
+
+      application.company = companyDetails.name;
+    }
+
+    // // if (!applications.length)
+    // //   return res.status(404).json({ message: "No Application found" });
+
+    res.status(200).json({ applications, pagination });
   } catch (error) {
     console.log("Error in getApplications:", error);
     res.status(500).json({ message: "Internal Server Error" });

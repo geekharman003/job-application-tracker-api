@@ -1,0 +1,19 @@
+.saved {
+    background-color: #1d4ed8;
+}
+
+.applied {
+    background-color: #fe9a00;
+}
+
+.interview {
+    background-color: #a855f7;
+}
+
+.offer {
+    background-color: #22c55e;
+}
+
+.rejected {
+    background-color: #ef4444;
+}

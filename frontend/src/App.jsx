@@ -7,6 +7,7 @@ import Profile from "./pages/Profile.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import useAuth from "./store/useAuthStore.js";
 import NotFound from "./pages/NotFound.jsx";
+import Jobs from "./pages/Jobs/Jobs.jsx";
 
 function App() {
   const authUser = useAuth((state) => state.authUser);
@@ -28,6 +29,10 @@ function App() {
         <Route
           path="/dashboard"
           element={authUser ? <Dashboard /> : <Navigate to={"/login"} />}
+        />
+        <Route
+          path="/jobs"
+          element={authUser ? <Jobs /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/profile"

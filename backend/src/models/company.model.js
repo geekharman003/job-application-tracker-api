@@ -8,10 +8,6 @@ const Company = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    domain: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   { timestamps: true },
 );

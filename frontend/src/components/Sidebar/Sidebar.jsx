@@ -7,7 +7,7 @@ function Sidebar({ setSideBarDisplay }) {
   return (
     <div
       id="sidebar"
-      className="w-56 h-screen fixed transition ease-in-out delay-150 bg-slate-900 text-white"
+      className="w-56 h-screen fixed z-40 transition ease-in-out delay-150 bg-slate-900 text-white"
     >
       <div
         id="sidebar-header"
