@@ -139,10 +139,10 @@ function Profile() {
           {/* profile section */}
           <div className="bg-white rounded-xl">
             <div className="flex gap-2 rounded-lg px-3 py-4 mt-5">
-              <div className="flex justify-center items-center rounded-full text-white bg-blue-700">
+              <div className="flex justify-center items-center rounded-full text-white bg-blue-700 w-[80px] h-[80px]">
                 <img
-                  className="w-full h-full text-center object-cover rounded-full"
-                  src={profileUrl}
+                  className="w-[80px] h-[80px] text-center object-cover rounded-full"
+                  src={profileUrl || defaultProfile}
                   alt="profile image"
                   onError={(e) => {
                     e.target.src = defaultProfile;

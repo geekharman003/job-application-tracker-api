@@ -41,7 +41,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/applications", applicationRoutes);
-app.use("/api/applications/:applicationId/reminders", reminderRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/dashboard/", dashboardRoutes);
 

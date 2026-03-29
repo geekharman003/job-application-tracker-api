@@ -16,6 +16,8 @@ import { axiosClient } from "../../axios/axiosClient";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import "./Jobs.css";
+import EditApplicationModal from "../../components/EditApplicationModal/EditApplicationModal";
+import { useNavigate } from "react-router-dom";
 
 function Jobs() {
   const [isAddingJob, setIsAddingJob] = useState(false);
@@ -29,11 +31,13 @@ function Jobs() {
     status: "",
     company: "",
   });
+  const [selectedApplication, setSelectedApplication] = useState(null);
 
-    useEffect(() => {
-      setPage(1);
-    }, [filters.company, filters.jobTitle, filters.status]);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    setPage(1);
+  }, [filters.company, filters.jobTitle, filters.status]);
 
   useEffect(() => {
     (async () => {
@@ -87,9 +91,22 @@ function Jobs() {
           setIsAddingJob={setIsAddingJob}
           applications={applications}
           setApplications={setApplications}
+          setPagination={setPagination}
           limit={limit}
           offset={offset}
+        />
+      ) : (
+        ""
+      )}
+
+      {selectedApplication ? (
+        <EditApplicationModal
+          selectedApplication={selectedApplication}
+          setSelectedApplication={setSelectedApplication}
+          setApplications={setApplications}
           setPagination={setPagination}
+          limit={limit}
+          offset={offset}
         />
       ) : (
         ""
@@ -116,6 +133,7 @@ function Jobs() {
               </button>
             </div>
           </div>
+          {/* filter section */}
           <div className="flex gap-2 flex-wrap mt-3">
             <div className="flex items-center relative mt-2">
               <Search size={15} className="absolute ml-2 text-slate-500" />
@@ -184,7 +202,13 @@ function Jobs() {
               <tbody className="bg-white">
                 {applications && applications.length ? (
                   applications.map((application, index) => (
-                    <tr key={index} className="border-b-2">
+                    <tr
+                      onClick={() =>
+                        navigate(`/jobs/${application.id}`)
+                      }
+                      key={index}
+                      className="border-b-2"
+                    >
                       <td>{application.company}</td>
                       <td>{application.jobTitle}</td>
                       <td className="hidden md:table-cell">
@@ -203,16 +227,24 @@ function Jobs() {
                       </td>
                       <td className="flex justify-end items-center gap-2 w-full h-full">
                         <Link
+                          onClick={(e) => e.stopPropagation()}
                           to={application.jobLink ? application.jobLink : "#"}
-                          target="_blank"
                         >
                           <SquareArrowOutUpRight size={15} />
                         </Link>
-                        <button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedApplication(application);
+                          }}
+                        >
                           <Pencil size={15} />
                         </button>
                         <button
-                          onClick={() => deleteApplication(application.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteApplication(application.id);
+                          }}
                         >
                           <Trash2 size={15} />
                         </button>
@@ -222,7 +254,7 @@ function Jobs() {
                 ) : (
                   <tr>
                     <td className="text-center" colSpan={7}>
-                      no application found
+                      no applications found
                     </td>
                   </tr>
                 )}

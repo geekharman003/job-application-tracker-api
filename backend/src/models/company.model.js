@@ -7,6 +7,7 @@ const Company = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique:true
     },
   },
   { timestamps: true },

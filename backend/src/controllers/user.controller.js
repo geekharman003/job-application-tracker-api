@@ -19,8 +19,13 @@ export const getProfile = async (req, res) => {
     });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const getCommand = getObjectCommand(ENV.BUCKET_NAME, user.profilePicUrl);
-    const signedUrl = await getSignedUrl(s3, getCommand, { expiresIn: 60 });
+    let signedUrl = null;
+
+    if(user.profilePicUrl){
+      const getCommand = getObjectCommand(ENV.BUCKET_NAME, user.profilePicUrl);
+      signedUrl = await getSignedUrl(s3, getCommand, { expiresIn: 60 });
+    }
+
 
     const resumes = await Resume.findAll({
       where: {

@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import useAuth from "./store/useAuthStore.js";
 import NotFound from "./pages/NotFound.jsx";
 import Jobs from "./pages/Jobs/Jobs.jsx";
+import JobApplication from "./components/JobApplication/JobApplication.jsx";
 
 function App() {
   const authUser = useAuth((state) => state.authUser);
@@ -35,9 +36,14 @@ function App() {
           element={authUser ? <Jobs /> : <Navigate to={"/login"} />}
         />
         <Route
+          path="/jobs/:id"
+          element={authUser ? <JobApplication /> : <Navigate to={"/login"} />}
+        />
+        <Route
           path="/profile"
           element={authUser ? <Profile /> : <Navigate to={"/login"} />}
         />
+
         <Route
           path="/signup"
           element={authUser ? <Navigate to={"/dashboard"} /> : <Signup />}

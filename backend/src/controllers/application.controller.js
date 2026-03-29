@@ -2,6 +2,7 @@ import { type } from "os";
 import { Application, Company, Note, Reminder } from "../models/index.js";
 import { sequelize } from "../utils/db.js";
 import { QueryTypes } from "sequelize";
+import { updateCompany } from "./company.controller.js";
 
 // application
 export const createApplication = async (req, res) => {
@@ -67,6 +68,7 @@ export const updateApplication = async (req, res) => {
     const { id } = req.params;
 
     const {
+      company,
       jobTitle,
       location,
       salaryRange,
@@ -81,6 +83,20 @@ export const updateApplication = async (req, res) => {
 
     if (!application)
       return res.status(404).json({ message: "No application found" });
+
+    const companyDetails = await Company.findOne({
+      where: { name: company.trim().toLowerCase() },
+      raw: true,
+    });
+
+    if (companyDetails) {
+      application.update({ CompanyId: companyDetails.id });
+    } else {
+      const newCompanyDetails = await Company.create({
+        name: company.trim().toLowerCase(),
+      });
+      await application.update({ CompanyId: newCompanyDetails.id });
+    }
 
     await application.update({
       jobTitle,
@@ -143,7 +159,8 @@ export const getApplications = async (req, res) => {
 
     // filter query
     let query = "SELECT * FROM applications WHERE UserId = :UserId";
-    let totalQuery = "SELECT COUNT(*) as totalRecords FROM applications WHERE UserId = :UserId";
+    let totalQuery =
+      "SELECT COUNT(*) as totalRecords FROM applications WHERE UserId = :UserId";
 
     // filters
     if (status && status !== "all") {
@@ -154,7 +171,6 @@ export const getApplications = async (req, res) => {
     if (title) {
       query += " AND jobTitle LIKE :jobTitle";
       totalQuery += " AND jobTitle LIKE :jobTitle";
-
     }
 
     if (company) {
@@ -185,18 +201,16 @@ export const getApplications = async (req, res) => {
     });
 
     // total records query
-    let [totalRecords] = await sequelize.query(totalQuery,
-      {
-        replacements: {
-          UserId: userId,
-          status: status,
-          jobTitle: title + "%",
-          companyId: companyDetails ? companyDetails.id : 0,
-        },
+    let [totalRecords] = await sequelize.query(totalQuery, {
+      replacements: {
+        UserId: userId,
+        status: status,
+        jobTitle: title + "%",
+        companyId: companyDetails ? companyDetails.id : 0,
       },
-    );
+    });
 
-    totalRecords = totalRecords[0]["totalRecords"]
+    totalRecords = totalRecords[0]["totalRecords"];
 
     const pagination = {
       start: offset + 1,
@@ -229,7 +243,14 @@ export const getApplication = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const application = await Application.findByPk(id, { raw: true });
+    const application = await Application.findByPk(id, {
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      raw: true,
+    });
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
 
     const company = await Company.findByPk(application.CompanyId, {
       attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -249,12 +270,9 @@ export const getApplication = async (req, res) => {
     const applicationDetails = {
       ...application,
       ...company,
-      ...notes,
-      ...reminders,
+      notes: [...notes],
+      reminders: [...reminders],
     };
-
-    if (!application)
-      return res.status(404).json({ message: "No Application Found" });
 
     res.status(200).json(applicationDetails);
   } catch (error) {
