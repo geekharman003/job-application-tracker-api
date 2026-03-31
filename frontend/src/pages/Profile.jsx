@@ -17,9 +17,6 @@ function Profile() {
   const [resumes, setResumes] = useState([]);
   const [profileUrl, setProfileUrl] = useState(null);
   const [isUpdatingDetails, setIsUpdatingDetails] = useState(false);
-  const [isUpdatingProfilePic, setIsUpdatingProfilePic] = useState(false);
-  const [isUploadingResume, setIsUploadingResume] = useState(false);
-  const [isExportingData, setIsExportingData] = useState(false);
   const [isDeletingProfile, setIsDeletingProfile] = useState(false);
 
   useEffect(() => {
