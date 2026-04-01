@@ -320,7 +320,7 @@ function Profile() {
               resumes.map((resume, index) => (
                 <div
                   key={index}
-                  className="flex justify-between border-2 p-2 mt-3 rounded-xl"
+                  className="flex justify-between border-2 dark:border-zinc-800 p-2 mt-3 rounded-xl"
                 >
                   <div className="flex items-center gap-2">
                     <span className="w-fit bg-slate-200 p-2 rounded-xl">
@@ -346,7 +346,7 @@ function Profile() {
                 </div>
               ))
             ) : (
-              <div className="border-2 p-2 mt-3 rounded-xl">
+              <div className="border-2 dark:border-zinc-800 p-2 mt-3 rounded-xl">
                 <p className="text-center dark:text-white">No resumes Added</p>
               </div>
             )}
@@ -359,7 +359,7 @@ function Profile() {
               </span>
               <span className="text-sm font-medium">Account Settings</span>
             </div>
-            <div className="flex items-center justify-between mt-3 py-2 border-b-2">
+            <div className="flex items-center justify-between mt-3 py-2 border-b-2 dark:border-zinc-800">
               <div>
                 <p className="font-medium dark:text-white">Export Data</p>
                 <p className="text-sm text-slate-500">

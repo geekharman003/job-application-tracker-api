@@ -11,8 +11,7 @@ function EditApplicationModal({
   limit,
   offset,
 }) {
-
-  const [company,setCompany] = useState(selectedApplication.company);
+  const [company, setCompany] = useState(selectedApplication.company);
   const [jobTitle, setJobTitle] = useState(selectedApplication.jobTitle);
   const [location, setLocation] = useState(selectedApplication.location);
   const [salaryRange, setSalaryRange] = useState(
@@ -26,12 +25,24 @@ function EditApplicationModal({
   const [resumeVersion, setResumeVersion] = useState(
     selectedApplication.resumeVersion,
   );
+  const [resumeVersions, setResumeVersions] = useState([]);
   const [jobDescription, setJobDescription] = useState(
     selectedApplication.jobDescription,
   );
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
+    (async () => {
+      try {
+        const response = await axiosClient.get("/users/profile/resumes");
+
+        setResumeVersions(response?.data);
+      } catch (error) {
+        console.log("Error during loading resumes:", error);
+        toast.error("Failed to load resumes");
+      }
+    })();
 
     return () => (document.body.style.overflow = "auto");
   }, []);
@@ -88,7 +99,9 @@ function EditApplicationModal({
           className="absolute top-2 right-2 active:border-blue-500 active:border-2 rounded-lg dark:text-white"
         />
         <form onSubmit={(e) => editApplication(e)} className="p-2">
-          <p className="text-lg font-semibold dark:text-white">Edit Application</p>
+          <p className="text-lg font-semibold dark:text-white">
+            Edit Application
+          </p>
           <div className="flex gap-2 mt-4">
             <div>
               <label className="font-medium dark:text-white" htmlFor="company">
@@ -141,7 +154,10 @@ function EditApplicationModal({
               />
             </div>
             <div>
-              <label className="font-medium dark:text-white" htmlFor="salaryRange">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="salaryRange"
+              >
                 Salary Range
               </label>
               <br />
@@ -191,7 +207,10 @@ function EditApplicationModal({
               </select>
             </div>
             <div className="w-full">
-              <label className="font-medium dark:text-white" htmlFor="applicationDate">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="applicationDate"
+              >
                 Date Applied <sup>*</sup>
               </label>
               <br />
@@ -209,11 +228,34 @@ function EditApplicationModal({
           </div>
           <div className="flex gap-2 mt-4">
             <div className="w-full">
-              <label className="font-medium dark:text-white" htmlFor="resumeVersion">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="resumeVersion"
+              >
                 Resume Version <sup>*</sup>
               </label>
               <br />
-              <input
+              <select
+                className="bg-white p-1 border-2 rounded-lg"
+                name="resumeVersion"
+                value={resumeVersion}
+                onChange={(e) => setResumeVersion(e.target.value)}
+                id="resumeVersion"
+              >
+                {resumeVersions && resumeVersions.length ? (
+                  resumeVersions.map((resume, index) => (
+                    <option
+                      key={index}
+                      value={resume.version}
+                    >
+                      {resume.version}
+                    </option>
+                  ))
+                ) : (
+                  <option value="none">Select resume</option>
+                )}
+              </select>
+              {/* <input
                 className="w-full box-border border-2 rounded-lg p-1"
                 type="text"
                 value={resumeVersion}
@@ -222,12 +264,15 @@ function EditApplicationModal({
                 id="resumeVersion"
                 placeholder="e.g. Resume v1-Engineering"
                 required
-              />
+              /> */}
             </div>
           </div>
           <div className="flex gap-2 mt-4">
             <div className="w-full">
-              <label className="font-medium dark:text-white" htmlFor="description">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="description"
+              >
                 Job Description / Notes
               </label>
               <br />

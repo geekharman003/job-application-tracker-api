@@ -20,11 +20,21 @@ function JobModal({
     new Date().toISOString().split("T")[0],
   );
   const [resumeVersion, setResumeVersion] = useState("");
+  const [resumeVersions, setResumeVersions] = useState([]);
   const [jobDescription, setJobDescription] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    (async () => {
+      try {
+        const response = await axiosClient.get("/users/profile/resumes");
 
+        setResumeVersions(response?.data);
+      } catch (error) {
+        console.log("Error during loading resumes:", error);
+        toast.error("Failed to load resumes");
+      }
+    })();
     return () => (document.body.style.overflow = "auto");
   }, []);
 
@@ -80,7 +90,9 @@ function JobModal({
           className="absolute top-2 right-2 active:border-blue-500 active:border-2 rounded-lg dark:text-white"
         />
         <form onSubmit={(e) => addApplication(e)} className="p-2">
-          <p className="text-lg font-semibold dark:text-white">Add Application</p>
+          <p className="text-lg font-semibold dark:text-white">
+            Add Application
+          </p>
           <div className="flex gap-2 mt-4">
             <div>
               <label className="font-medium dark:text-white" htmlFor="company">
@@ -133,7 +145,10 @@ function JobModal({
               />
             </div>
             <div>
-              <label className="font-medium dark:text-white" htmlFor="salaryRange">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="salaryRange"
+              >
                 Salary Range
               </label>
               <br />
@@ -183,7 +198,10 @@ function JobModal({
               </select>
             </div>
             <div className="w-full">
-              <label className="font-medium dark:text-white" htmlFor="applicationDate">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="applicationDate"
+              >
                 Date Applied <sup>*</sup>
               </label>
               <br />
@@ -201,11 +219,31 @@ function JobModal({
           </div>
           <div className="flex gap-2 mt-4">
             <div className="w-full">
-              <label className="font-medium dark:text-white" htmlFor="resumeVersion">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="resumeVersion"
+              >
                 Resume Version <sup>*</sup>
               </label>
               <br />
-              <input
+              <select
+                className="bg-white border-2 p-1 rounded-lg"
+                name="resumeVersion"
+                value={resumeVersion}
+                onChange={(e) => setResumeVersion(e.target.value)}
+                id="resumeVersion"
+              >
+                {resumeVersions && resumeVersions.length ? (
+                  resumeVersions.map((resume, index) => (
+                    <option key={index} value={resume.version}>
+                      {resume.version}
+                    </option>
+                  ))
+                ) : (
+                  <option value="none">Select one</option>
+                )}
+              </select>
+              {/* <input
                 className="w-full box-border border-2 rounded-lg p-1"
                 type="text"
                 value={resumeVersion}
@@ -214,12 +252,15 @@ function JobModal({
                 id="resumeVersion"
                 placeholder="e.g. Resume v1-Engineering"
                 required
-              />
+              /> */}
             </div>
           </div>
           <div className="flex gap-2 mt-4">
             <div className="w-full">
-              <label className="font-medium dark:text-white" htmlFor="description">
+              <label
+                className="font-medium dark:text-white"
+                htmlFor="description"
+              >
                 Job Description / Notes
               </label>
               <br />
