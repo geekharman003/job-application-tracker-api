@@ -23,7 +23,6 @@ function Jobs() {
   const [isAddingJob, setIsAddingJob] = useState(false);
   const [applications, setApplications] = useState([]);
   const [limit] = useState(5);
-  // let [offset, setOffset] = useState(0);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({
@@ -35,7 +34,7 @@ function Jobs() {
 
   const navigate = useNavigate();
 
-  console.log(page)
+  console.log(page);
 
   useEffect(() => {
     setPage(1);
@@ -45,7 +44,7 @@ function Jobs() {
     (async () => {
       try {
         const response = await axiosClient.get(
-          `/applications?limit=${limit}&offset=${(page-1)*limit}&title=${filters.jobTitle}&status=${filters.status}&company=${filters.company}`,
+          `/applications?limit=${limit}&offset=${(page - 1) * limit}&title=${filters.jobTitle}&status=${filters.status}&company=${filters.company}`,
         );
 
         setApplications(response.data?.applications);
@@ -65,7 +64,7 @@ function Jobs() {
       toast.success("Application deleted successfully");
 
       const response = await axiosClient.get(
-        `/applications?limit=${limit}&offset=${offset}&title=${filters.jobTitle}&status=${filters.status}&company=${filters.company}`,
+        `/applications?limit=${limit}&offset=${(page - 1) * limit}&title=${filters.jobTitle}&status=${filters.status}&company=${filters.company}`,
       );
 
       if (
@@ -94,7 +93,7 @@ function Jobs() {
           setApplications={setApplications}
           setPagination={setPagination}
           limit={limit}
-          offset={offset}
+          page={page}
         />
       ) : (
         ""
@@ -107,7 +106,7 @@ function Jobs() {
           setApplications={setApplications}
           setPagination={setPagination}
           limit={limit}
-          offset={offset}
+          page={page}
         />
       ) : (
         ""

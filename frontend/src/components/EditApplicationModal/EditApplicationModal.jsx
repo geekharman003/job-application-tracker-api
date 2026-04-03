@@ -9,7 +9,7 @@ function EditApplicationModal({
   setApplications,
   setPagination,
   limit,
-  offset,
+  page,
 }) {
   const [company, setCompany] = useState(selectedApplication.company);
   const [jobTitle, setJobTitle] = useState(selectedApplication.jobTitle);
@@ -65,7 +65,7 @@ function EditApplicationModal({
       });
 
       const response = await axiosClient.get(
-        `/applications?limit=${limit}&offset=${offset}`,
+        `/applications?limit=${limit}&offset=${(page - 1) * limit}`,
       );
 
       setApplications(response?.data?.applications);
@@ -244,10 +244,7 @@ function EditApplicationModal({
               >
                 {resumeVersions && resumeVersions.length ? (
                   resumeVersions.map((resume, index) => (
-                    <option
-                      key={index}
-                      value={resume.version}
-                    >
+                    <option key={index} value={resume.version}>
                       {resume.version}
                     </option>
                   ))

@@ -7,7 +7,7 @@ function JobModal({
   setIsAddingJob,
   setApplications,
   limit,
-  offset,
+  page,
   setPagination,
 }) {
   const [company, setCompany] = useState("");
@@ -56,7 +56,7 @@ function JobModal({
       });
 
       const response = await axiosClient.get(
-        `/applications?limit=${limit}&offset=${offset}`,
+        `/applications?limit=${limit}&offset=${(page-1) * limit}`,
       );
 
       setApplications(response?.data?.applications);
