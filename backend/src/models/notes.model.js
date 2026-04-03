@@ -18,7 +18,10 @@ const Note = sequelize.define(
       allowNull: false,
     },
   },
-  { timestamps: true },
+  {
+    tableName: "notes",
+    timestamps: true,
+  },
 );
 
 export default Note;

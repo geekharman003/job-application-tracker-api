@@ -5,7 +5,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 
-import { sequelize } from "./utils/db.js";
+import { connectToDB, sequelize } from "./utils/db.js";
 import { ENV } from "./config/env.js";
 
 import authRoutes from "./routes/auth.route.js";
@@ -51,12 +51,12 @@ if (ENV.NODE_ENV === "production") {
   app.get("/{*splat}", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "..", "frontend/dist/index.html"));
   });
-}
-else{
+} else {
   app.use(express.static(path.join(__dirname, "public")));
 }
 
-await sequelize.sync({ force: false });
-app.listen(ENV.PORT || 3000,"0.0.0.0", async () => {
+await sequelize.sync({ alter: false, force: false });
+// await connectToDB();
+app.listen(ENV.PORT || 3000, "0.0.0.0", async () => {
   console.log(`server is running on PORT:${ENV.PORT}`);
 });

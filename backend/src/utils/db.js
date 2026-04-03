@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import { ENV } from "../config/env.js";
 
+
 export const sequelize = new Sequelize(
   "jobapplicationtracker",
   ENV.DB_USERNAME,
@@ -8,6 +9,7 @@ export const sequelize = new Sequelize(
   {
     host: ENV.DB_HOST,
     dialect: "mysql",
+    port: 3306,
   },
 );
 

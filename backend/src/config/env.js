@@ -6,6 +6,7 @@ export const ENV = {
   DB_USERNAME: process.env.DB_USERNAME,
   DB_PASSWORD: process.env.DB_PASSWORD,
   DB_HOST: process.env.DB_HOST,
+  DB_PORT: process.env.DB_PORT,
   JWT_SECRET: process.env.JWT_SECRET,
   BUCKET_NAME: process.env.BUCKET_NAME,
   BUCKET_REGION: process.env.BUCKET_REGION,

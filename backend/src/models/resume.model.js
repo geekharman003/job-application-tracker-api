@@ -23,7 +23,10 @@ const Resume = sequelize.define(
       unique: true,
     },
   },
-  { timestamps: true },
+  {
+    tableName: "resumes",
+    timestamps: true,
+  },
 );
 
 export default Resume;

@@ -53,7 +53,10 @@ const Application = sequelize.define(
       type: DataTypes.STRING,
     },
   },
-  { timestamps: true },
+  {
+    tableName: "applications",
+    timestamps: true,
+  },
 );
 
 export default Application;

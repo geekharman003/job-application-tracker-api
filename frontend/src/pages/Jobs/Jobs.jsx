@@ -23,7 +23,7 @@ function Jobs() {
   const [isAddingJob, setIsAddingJob] = useState(false);
   const [applications, setApplications] = useState([]);
   const [limit] = useState(5);
-  let [offset, setOffset] = useState(0);
+  // let [offset, setOffset] = useState(0);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({
@@ -35,16 +35,17 @@ function Jobs() {
 
   const navigate = useNavigate();
 
+  console.log(page)
+
   useEffect(() => {
     setPage(1);
   }, [filters.company, filters.jobTitle, filters.status]);
 
   useEffect(() => {
-    setOffset((page - 1) * limit);
     (async () => {
       try {
         const response = await axiosClient.get(
-          `/applications?limit=${limit}&offset=${offset}&title=${filters.jobTitle}&status=${filters.status}&company=${filters.company}`,
+          `/applications?limit=${limit}&offset=${(page-1)*limit}&title=${filters.jobTitle}&status=${filters.status}&company=${filters.company}`,
         );
 
         setApplications(response.data?.applications);
@@ -54,7 +55,7 @@ function Jobs() {
         toast.error("Error occur during fetching applications!");
       }
     })();
-  }, [limit, offset, page, filters.jobTitle, filters.status, filters.company]);
+  }, [limit, page, filters.jobTitle, filters.status, filters.company]);
 
   const deleteApplication = async (applicationId) => {
     if (!applicationId) return;
@@ -268,7 +269,9 @@ function Jobs() {
             </p>
             <div className="flex justify-center gap-2 mt-1">
               <button
-                onClick={() => setPage((prev) => prev - 1)}
+                onClick={() => {
+                  setPage((prev) => prev - 1);
+                }}
                 className={`flex items-center gap-1 rounded-lg ${pagination?.hasPrevPage ? "bg-gray-300" : "bg-gray-200"} ${pagination?.hasPrevPage ? "cursor-default" : "cursor-not-allowed"} hover:bg-gray-400 p-1`}
                 disabled={pagination?.hasPrevPage ? false : true}
               >
@@ -278,7 +281,9 @@ function Jobs() {
                 Previous
               </button>
               <button
-                onClick={() => setPage((prev) => prev + 1)}
+                onClick={() => {
+                  setPage((prev) => prev + 1);
+                }}
                 className={`flex items-center gap-1 rounded-lg ${pagination?.hasNextPage ? "bg-gray-300" : "bg-gray-200"} ${pagination.hasNextPage ? "cursor-default" : "cursor-not-allowed"} hover:bg-gray-400 p-1`}
                 disabled={pagination.hasNextPage ? false : true}
               >

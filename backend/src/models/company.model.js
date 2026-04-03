@@ -10,7 +10,9 @@ const Company = sequelize.define(
       unique:true
     },
   },
-  { timestamps: true },
+  { 
+    tableName:"companies",
+    timestamps: true },
 );
 
 export default Company;

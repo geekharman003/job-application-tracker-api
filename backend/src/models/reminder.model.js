@@ -26,7 +26,10 @@ const Reminder = sequelize.define(
       defaultValue: false,
     },
   },
-  { timestamps: true },
+  {
+    tableName: "reminders",
+    timestamps: true,
+  },
 );
 
 export default Reminder;
