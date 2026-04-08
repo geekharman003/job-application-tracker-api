@@ -30,6 +30,7 @@ function JobModal({
         const response = await axiosClient.get("/users/profile/resumes");
 
         setResumeVersions(response?.data);
+      
       } catch (error) {
         console.log("Error during loading resumes:", error);
         toast.error("Failed to load resumes");
@@ -56,7 +57,7 @@ function JobModal({
       });
 
       const response = await axiosClient.get(
-        `/applications?limit=${limit}&offset=${(page-1) * limit}`,
+        `/applications?limit=${limit}&offset=${(page - 1) * limit}`,
       );
 
       setApplications(response?.data?.applications);
@@ -232,7 +233,9 @@ function JobModal({
                 value={resumeVersion}
                 onChange={(e) => setResumeVersion(e.target.value)}
                 id="resumeVersion"
+                required
               >
+                <option value="" disabled>Select a Resume</option>
                 {resumeVersions && resumeVersions.length ? (
                   resumeVersions.map((resume, index) => (
                     <option key={index} value={resume.version}>
@@ -243,16 +246,13 @@ function JobModal({
                   <option value="none">Select one</option>
                 )}
               </select>
-              {/* <input
-                className="w-full box-border border-2 rounded-lg p-1"
-                type="text"
-                value={resumeVersion}
-                onChange={(e) => setResumeVersion(e.target.value)}
-                name="resumeVersion"
-                id="resumeVersion"
-                placeholder="e.g. Resume v1-Engineering"
-                required
-              /> */}
+              {
+                <p
+                  className={`text-red-500 ${resumeVersions.length ? "hidden" : "block"}`}
+                >
+                  add some resumes in profile section first
+                </p>
+              }
             </div>
           </div>
           <div className="flex gap-2 mt-4">

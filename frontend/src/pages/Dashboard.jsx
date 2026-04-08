@@ -212,37 +212,61 @@ function Dashboard() {
               <p className="font-semibold dark:text-white">
                 Recent Applications
               </p>
-              {applications && applications.length
-                ? applications.map((application, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between bg-slate-100 dark:bg-zinc-800 mt-2 p-3 py-5 rounded-lg"
-                    >
-                      <div>
-                        <p className="font-medium dark:text-white">
-                          {application.jobTitle}
-                        </p>
-                        <p className="text-slate-500">{application?.company}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium dark:text-white">
-                          {application.applicationDate}
-                        </p>
-                      </div>
+              {applications && applications.length ? (
+                applications.map((application, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between bg-slate-100 dark:bg-zinc-800 mt-2 p-3 py-5 rounded-lg"
+                  >
+                    <div>
+                      <p className="font-medium dark:text-white">
+                        {application.jobTitle}
+                      </p>
+                      <p className="text-slate-500">{application?.company}</p>
                     </div>
-                  ))
-                : ""}
+                    <div>
+                      <p className="font-medium dark:text-white">
+                        {application.applicationDate}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center dark:text-slate-500">
+                  No applications found
+                </p>
+              )}
             </div>
             <div className="bg-white dark:bg-zinc-900 p-3">
-              <p className="font-semibold dark:text-white">Status Distribution</p>
+              <p className="font-semibold dark:text-white">
+                Status Distribution
+              </p>
               <div className="flex justify-center items-center">
-                <PieChartComponent data={pieChartData} />
+                {summary.applied ||
+                summary.interview ||
+                summary.offer ||
+                summary.rejected ||
+                summary.saved ? (
+                  <PieChartComponent data={pieChartData} />
+                ) : (
+                  <p className="dark:text-slate-500">No applications found</p>
+                )}
               </div>
             </div>
             <div className="bg-white dark:bg-zinc-900 md:col-span-2 p-3">
-              <p className="font-semibold dark:text-white">Application Funnel</p>
+              <p className="font-semibold dark:text-white">
+                Application Funnel
+              </p>
               <div className="flex justify-center items-center mt-3">
-                <FunnelChartComponent data={funnelChartData} />
+                {summary.applied ||
+                summary.interview ||
+                summary.offer ||
+                summary.rejected ||
+                summary.saved ? (
+                  <FunnelChartComponent data={funnelChartData} />
+                ) : (
+                  <p className="dark:text-slate-500">No applications found</p>
+                )}
               </div>
             </div>
           </div>
